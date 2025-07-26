@@ -1,0 +1,52 @@
+services:
+  prolog-bootstrap:
+    image: prolog:0.0.0
+    volumes:
+      - prolog-bootstrap:/data
+    ports:
+      - 8400:8400
+      - 8401:8401
+      - 8402:8402
+    environment:
+      - IS_RAFT_BOOTSTRAPPER=true
+      - NODE_NAME=prolog-bootstrap
+    env_file:
+      - dev.env
+    networks:
+      - prolog-network
+  prolog-follower-1:
+    image: prolog:0.0.0
+    depends_on:
+      - prolog-bootstrap
+    volumes:
+      - prolog-follower-1:/data
+    ports:
+      - 8410:8400
+      - 8411:8401
+      - 8412:8402
+    env_file:
+      - dev.env
+    environment:
+      - NODE_NAME=prolog-follower-1
+    networks:
+      - prolog-network
+  prolog-follower-2:
+    image: prolog:0.0.0
+    volumes:
+      - prolog-follower-2:/data
+    ports:
+      - 8420:8400
+      - 8421:8401
+      - 8422:8402
+    env_file:
+      - dev.env
+    environment:
+      - NODE_NAME=prolog-follower-2
+    networks:
+      - prolog-network
+volumes:
+  prolog-bootstrap:
+  prolog-follower-1:
+  prolog-follower-2:
+networks:
+  prolog-network:

@@ -1,0 +1,3 @@
+p, root, .*
+p, nobody, /api.Log/Consume
+p, nobody, /api.Log/ConsumeStream

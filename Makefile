@@ -1,0 +1,49 @@
+CERT_PATH=./cert
+
+compile:
+	protoc api/*.proto \
+		--go_out=. \
+		--go-grpc_out=. \
+		--go_opt=paths=source_relative \
+		--go-grpc_opt=paths=source_relative \
+		--proto_path=.
+
+gencert:
+	cfssl gencert \
+		-initca test/ca-csr.json | cfssljson -bare ca
+
+	cfssl gencert \
+		-ca=ca.pem \
+		-ca-key=ca-key.pem \
+		-config=test/ca-config.json \
+		-profile=server \
+		test/server-csr.json | cfssljson -bare server
+
+	cfssl gencert \
+		-ca=ca.pem \
+		-ca-key=ca-key.pem \
+		-config=test/ca-config.json \
+		-profile=client \
+		test/client-csr.json | cfssljson -bare client
+
+	cfssl gencert \
+		-ca=ca.pem \
+		-ca-key=ca-key.pem \
+		-config=test/ca-config.json \
+		-profile=client \
+		-cn="root" \
+		test/client-csr.json | cfssljson -bare root-client
+
+	cfssl gencert \
+		-ca=ca.pem \
+		-ca-key=ca-key.pem \
+		-config=test/ca-config.json \
+		-profile=client \
+		-cn="nobody" \
+		test/client-csr.json | cfssljson -bare nobody-client
+
+	mv *.pem *.csr ${CERT_PATH}
+
+	cp test/model.conf $(CERT_PATH)/model.conf
+
+	cp test/policy.csv $(CERT_PATH)/policy.csv
