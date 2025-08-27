@@ -1,5 +1,3 @@
-ARG ENV_PATH=./dev.env
-
 FROM golang:1.23-alpine AS builder
 RUN apk add git protobuf-dev
 WORKDIR /app
@@ -13,5 +11,5 @@ WORKDIR /app
 COPY --from=builder /go/bin/prolog /bin/prolog
 COPY ./cert /app/cert
 COPY ./test /app/test
-COPY ${ENV_PATH} /app/config.env
+COPY ./dev.env /app/dev.env
 ENTRYPOINT [ "/bin/prolog" ]

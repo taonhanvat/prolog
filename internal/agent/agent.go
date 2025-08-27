@@ -51,7 +51,7 @@ func New(c Config) (agent *Agent, err error) {
 	}
 	err = tool.TryAll(
 		agent.setupLog,
-		agent.SetupServer,
+		agent.setupServer,
 		agent.setupMemberShip,
 	)
 	if err != nil {
@@ -92,7 +92,7 @@ func (a *Agent) setupLog() (err error) {
 	return nil
 }
 
-func (a *Agent) SetupServer() (err error) {
+func (a *Agent) setupServer() (err error) {
 	l, err := net.Listen("tcp", fmt.Sprintf("%s:%d", a.Config.RPCAddr, a.Config.RPCPort))
 	if err != nil {
 		return err

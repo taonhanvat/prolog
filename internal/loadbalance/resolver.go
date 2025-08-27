@@ -47,7 +47,6 @@ func (r *Resolver) ResolveNow(opts resolver.ResolveNowOptions) {
 
 	resolverClient := api.NewLogClient(r.resolverConnection)
 	ctx := context.Background()
-	ctx.Done()
 	resp, err := resolverClient.GetServers(ctx, &api.GetServersRequest{})
 	if err != nil {
 		fmt.Printf("GetServers error: %v\n", err)
